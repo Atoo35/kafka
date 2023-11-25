@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-test-service-deployment
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-test-service
+  template:
+    metadata:
+      labels:
+        app: kafka-test-service
+    spec:
+      containers:
+        - name: kafka-test-service
+          image: test-kafka
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-test-service
+  namespace: kafka
+spec:
+  selector:
+    app: kafka-test-service
+  ports:
+    - name: kafka-test-service-port
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
